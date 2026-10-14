@@ -1,0 +1,40 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Supabase lokal di runner (Docker sudah tersedia di ubuntu-latest).
+      - name: Start Supabase
+        run: npx supabase start -x studio,imgproxy,mailpit,realtime,postgres-meta,edge-runtime,logflare,vector,supavisor
+
+      # Env untuk build diambil dari Supabase lokal runner, bukan secret produksi.
+      - name: Set env dari Supabase lokal
+        run: |
+          eval "$(npx supabase status -o env)"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$PUBLISHABLE_KEY" >> "$GITHUB_ENV"
+          echo "SUPABASE_SECRET_KEY=$SECRET_KEY" >> "$GITHUB_ENV"
+
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
+
+      # Migrasi + seed harus bisa diterapkan dari nol.
+      - run: npx supabase db reset
+
+      # ponytail: dilewati sampai ada tes pgTAP pertama (F1.2); `supabase test db` gagal bila folder kosong.
+      - name: Tes database (pgTAP)
+        if: hashFiles('supabase/tests/**/*.sql') != ''
+        run: npx supabase test db
