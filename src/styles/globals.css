@@ -5,44 +5,55 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Tema Ujianku: teal pendidikan (DEC-013). Kontras teks ≥ 4.5:1 sudah dicek. */
+  --background: oklch(0.984 0.003 247.9); /* #F8FAFC */
+  --foreground: oklch(0.208 0.04 265.8); /* #0F172A */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.208 0.04 265.8);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --popover-foreground: oklch(0.208 0.04 265.8);
+  --primary: oklch(0.511 0.086 186.4); /* #0F766E teal-700 */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.984 0.014 180.7); /* #F0FDFA teal-50 */
+  --secondary-foreground: oklch(0.437 0.071 188.2); /* #115E59 teal-800 */
+  --muted: oklch(0.968 0.007 247.9); /* #F1F5F9 */
+  --muted-foreground: oklch(0.446 0.037 257.3); /* #475569 */
+  --accent: oklch(0.984 0.014 180.7); /* hover menu/list (bukan CTA) */
+  --accent-foreground: oklch(0.437 0.071 188.2);
+  --destructive: oklch(0.577 0.215 27.3); /* #DC2626 waktu habis, error */
+  --warning: oklch(0.666 0.157 58.3); /* #D97706 ragu-ragu, peringatan; teks wajib gelap */
+  --warning-foreground: oklch(0.216 0.006 56); /* #1C1917 */
+  --success: oklch(0.527 0.137 150.1); /* #15803D terjawab, lulus KKM */
+  --success-foreground: oklch(1 0 0);
+  --border: oklch(0.929 0.013 255.5); /* #E2E8F0 */
+  --input: oklch(0.711 0.035 256.8); /* #94A3B8 lebih tegas agar kolom form terlihat */
+  --ring: oklch(0.511 0.086 186.4);
+  --chart-1: oklch(0.511 0.086 186.4);
+  --chart-2: oklch(0.6 0.104 184.7);
+  --chart-3: oklch(0.785 0.133 181.9);
+  --chart-4: oklch(0.666 0.157 58.3);
+  --chart-5: oklch(0.386 0.059 188.4);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.208 0.04 265.8);
+  --sidebar-primary: oklch(0.511 0.086 186.4);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.984 0.014 180.7);
+  --sidebar-accent-foreground: oklch(0.437 0.071 188.2);
+  --sidebar-border: oklch(0.929 0.013 255.5);
+  --sidebar-ring: oklch(0.511 0.086 186.4);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-heading: var(--font-sans);
+  /* --font-body & --font-display diisi next/font di _app.tsx */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-display), var(--font-sans);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -88,8 +99,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.785 0.133 181.9); /* teal-400 */
+  --primary-foreground: oklch(0.277 0.045 192.5);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -99,7 +110,11 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.785 0.133 181.9);
+  --warning: oklch(0.666 0.157 58.3);
+  --warning-foreground: oklch(0.216 0.006 56);
+  --success: oklch(0.527 0.137 150.1);
+  --success-foreground: oklch(1 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -124,5 +139,10 @@
   }
   html {
     @apply font-sans;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
   }
 }
