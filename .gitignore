@@ -41,6 +41,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .codegraph/
-docs/
-AGENTS.md
-todo.md
+
