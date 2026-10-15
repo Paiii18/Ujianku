@@ -45,17 +45,15 @@ export const NAV: Record<UserRole, NavItem[]> = {
       href: "/school/academic-years",
       label: "Tahun ajaran",
       icon: CalendarRange,
-      soon: true,
     }, // F2.2
-    { href: "/school/subjects", label: "Mapel", icon: BookOpen, soon: true }, // F2.2
-    { href: "/school/classes", label: "Kelas", icon: School, soon: true }, // F2.5
-    { href: "/school/teachers", label: "Guru", icon: UserCog, soon: true }, // F2.3
-    { href: "/school/students", label: "Murid", icon: Users, soon: true }, // F2.3
+    { href: "/school/subjects", label: "Mapel", icon: BookOpen }, // F2.2
+    { href: "/school/classes", label: "Kelas", icon: School }, // F2.5
+    { href: "/school/teachers", label: "Guru", icon: UserCog }, // F2.3
+    { href: "/school/students", label: "Murid", icon: Users }, // F2.3
     {
       href: "/school/assignments",
       label: "Penugasan guru",
       icon: ClipboardList,
-      soon: true,
     }, // F2.6
     {
       href: "/school/retakes",
@@ -77,8 +75,7 @@ export const NAV: Record<UserRole, NavItem[]> = {
       href: "/teacher/questions",
       label: "Bank soal",
       icon: Library,
-      soon: true,
-    }, // F2.12
+    }, // F2.9 (daftar lengkap F2.12)
     { href: "/teacher/exams", label: "Ujian", icon: GraduationCap, soon: true }, // F3.3
     {
       href: "/teacher/grading",

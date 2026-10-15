@@ -35,7 +35,8 @@ select results_eq('select role::text, is_active, tenant_active from public.my_ac
 
 select pg_temp.login_as('10000000-0000-0000-0000-000000000003');
 select results_eq('select role::text, is_active, tenant_active from public.my_access()',
-  $$values ('student', false, true)$$, 'Akun nonaktif terbaca is_active = false');
+  -- tenant_active ikut false: sejak F2.3 tenant_is_active() juga mensyaratkan akun aktif
+  $$values ('student', false, false)$$, 'Akun nonaktif terbaca is_active = false');
 
 select pg_temp.login_as('10000000-0000-0000-0000-000000000004');
 select results_eq('select role::text, is_active, tenant_active from public.my_access()',
