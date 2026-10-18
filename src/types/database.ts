@@ -378,11 +378,23 @@ isOneToOne: false
             "activate_academic_year":
 { Args: { "p_id": string }; Returns: undefined
                            },
+"assert_essay":
+{ Args: { "p_answer_key": string,"p_content": string,"p_keywords": (string)[],"p_label": string }; Returns: undefined
+                           },
+"clean_keywords":
+{ Args: { "p_keywords": (string)[] }; Returns: (string)[]
+                           },
 "create_school":
 { Args: { "p_admin_id": string,"p_admin_name": string,"p_code": string,"p_name": string }; Returns: string
                            },
 "create_school_user":
 { Args: { "p_full_name": string,"p_id": string,"p_nis_nip": string,"p_role": Database["public"]['Enums']["user_role"] }; Returns: undefined
+                           },
+"duplicate_question":
+{ Args: { "p_new_id": string,"p_source": string }; Returns: string
+                           },
+"import_questions":
+{ Args: { "p_questions": Json }; Returns: number
                            },
 "import_students":
 { Args: { "p_rows": Json }; Returns: number
@@ -418,7 +430,7 @@ isOneToOne: false
             }[]
                            },
 "save_question":
-{ Args: { "p_content": string,"p_explanation": string,"p_id": string,"p_image_path": string,"p_options": Json,"p_points": number,"p_subject_id": string,"p_type": Database["public"]['Enums']["question_type"] }; Returns: string
+{ Args: { "p_answer_key"?: string,"p_answers"?: (string)[],"p_content": string,"p_explanation": string,"p_id": string,"p_image_path": string,"p_keywords"?: (string)[],"p_options"?: Json,"p_pairs"?: Json,"p_points": number,"p_subject_id": string,"p_subs"?: Json,"p_type": Database["public"]['Enums']["question_type"] }; Returns: string
                            },
 "set_school_user_active":
 { Args: { "p_active": boolean,"p_id": string }; Returns: undefined

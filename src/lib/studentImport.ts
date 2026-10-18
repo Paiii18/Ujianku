@@ -1,4 +1,5 @@
 import * as XLSX from "xlsx";
+import { headerIndex, readGrid } from "./spreadsheet";
 
 // Import murid dari Excel / CSV (F2.4). SheetJS hanya dipakai di API Route (AGENTS.md §2).
 // Dua tahap murni (tanpa I/O) agar bisa diuji: baca sheet → validasi dengan data sekolah.
@@ -21,45 +22,14 @@ export type StudentRow = RawStudentRow & {
 export function readStudentRows(
   file: ArrayBuffer,
 ): { rows: RawStudentRow[] } | { error: string } {
-  let wb: XLSX.WorkBook;
-  try {
-    const bytes = new Uint8Array(file);
-    // .xlsx = arsip ZIP ("PK"); selain itu dianggap CSV dan didekode sendiri,
-    // karena SheetJS membaca CSV tanpa BOM sebagai Latin-1 (huruf non-ASCII rusak).
-    const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b;
-    // raw: sel CSV tetap teks (NIS "0012" tidak jadi angka 12)
-    // sheetRows: berhenti membaca setelah batas, file raksasa tidak di-parse seluruhnya
-    const opts = { dense: true, raw: true, sheetRows: MAX_ROWS + 2 };
-    wb = isZip
-      ? XLSX.read(bytes, { ...opts, type: "array" })
-      : XLSX.read(decodeText(bytes), { ...opts, type: "string" });
-  } catch {
-    return {
-      error: "File tidak bisa dibaca. Pastikan formatnya .xlsx atau .csv.",
-    };
-  }
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  if (!ws) return { error: "File tidak berisi sheet." };
+  const read = readGrid(file, MAX_ROWS);
+  if ("error" in read) return read;
+  const head = headerIndex(read.grid[0], HEADERS);
+  if ("error" in head) return head;
 
-  // header: 1 → array per baris; raw: false → teks sesuai tampilan sel (NIS angka tetap utuh)
-  const grid = XLSX.utils.sheet_to_json<unknown[]>(ws, {
-    header: 1,
-    raw: false,
-    defval: "",
-    blankrows: true,
-  });
-  const header = (grid[0] ?? []).map((h) => String(h).trim().toLowerCase());
-  const col = Object.fromEntries(HEADERS.map((h) => [h, header.indexOf(h)]));
-  const missing = HEADERS.filter((h) => col[h] < 0);
-  if (missing.length) {
-    return {
-      error: `Kolom ${missing.join(", ")} tidak ditemukan. Gunakan template.`,
-    };
-  }
-
-  const cell = (r: unknown[], h: (typeof HEADERS)[number]) =>
-    String(r[col[h]] ?? "").trim();
-  const rows = grid
+  const cell = (r: string[], h: (typeof HEADERS)[number]) =>
+    (r[head.col[h]] ?? "").trim();
+  const rows = read.grid
     .slice(1)
     .map((r, i) => ({
       row: i + 2,
@@ -75,15 +45,6 @@ export function readStudentRows(
     return { error: `Maksimal ${MAX_ROWS} murid per file.` };
   }
   return { rows };
-}
-
-// CSV "UTF-8" (Excel modern, Google Sheets) atau CSV biasa Excel Windows (Windows-1252).
-function decodeText(bytes: Uint8Array) {
-  try {
-    return new TextDecoder("utf-8", { fatal: true }).decode(bytes); // BOM dibuang otomatis
-  } catch {
-    return new TextDecoder("windows-1252").decode(bytes);
-  }
 }
 
 // classes: nama kelas (huruf kecil) → id, hanya tahun ajaran aktif.

@@ -75,7 +75,7 @@ select throws_ok($$select pg_temp.save('true_false', '[{"label": "A", "content":
 select throws_ok($$select pg_temp.save('multiple_choice', '[{"label": "A", "content": "1", "is_correct": true}, {"label": "B", "content": "2", "is_correct": false}]',
   'ffffffff-0000-0000-0000-00000000000b/94000000-0000-0000-0000-000000000001/x.png')$$,
   '22023', 'Path gambar tidak valid', 'Gambar dari folder lain ditolak');
-select throws_ok($$select pg_temp.save('essay', '[]')$$, '22023', null, 'Tipe lain belum didukung');
+select throws_ok($$select pg_temp.save('essay', '[]')$$, '22023', null, 'Essay tanpa jawaban acuan ditolak');
 
 -- Ubah ke Benar/Salah: opsi C ikut terhapus ---------------------------------------------
 select lives_ok($$select pg_temp.save('true_false', '[{"label": "A", "content": "Benar", "is_correct": false}, {"label": "B", "content": "Salah", "is_correct": true}]')$$,
