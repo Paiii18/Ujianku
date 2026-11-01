@@ -57,8 +57,12 @@ export async function proxy(request: NextRequest) {
 
   const { role } = access;
   if (role !== "super_admin" && !access.tenant_active) {
-    // ponytail: belum ada masa tenggang ujian berjalan (PRD), ditambah saat F3.7
-    return isExpired ? response : redirect("/subscription-expired");
+    // Masa tenggang PRD (DEC-043/044): ujian yang sedang dikerjakan tetap bisa diselesaikan
+    const grace =
+      role === "student" &&
+      pathname.startsWith("/student/attempts/") &&
+      (await supabase.rpc("in_exam_grace")).data === true;
+    if (!grace) return isExpired ? response : redirect("/subscription-expired");
   }
 
   if (isLogin || isExpired) return redirect(ROLE_HOME[role]);

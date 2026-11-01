@@ -43,6 +43,38 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"attempt_answers": {
+                  Row: {
+                    "answer_json": Json | null,"answer_text": string | null,"attempt_id": string,"auto_points": number | null,"id": string,"manual_points": number | null,"needs_review": boolean,"question_id": string,"review_note": string | null,"selected_option_id": string | null,"similarity": number | null,"tenant_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "answer_json"?: Json | null,"answer_text"?: string | null,"attempt_id": string,"auto_points"?: number | null,"id"?: string,"manual_points"?: number | null,"needs_review"?: boolean,"question_id": string,"review_note"?: string | null,"selected_option_id"?: string | null,"similarity"?: number | null,"tenant_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "answer_json"?: Json | null,"answer_text"?: string | null,"attempt_id"?: string,"auto_points"?: number | null,"id"?: string,"manual_points"?: number | null,"needs_review"?: boolean,"question_id"?: string,"review_note"?: string | null,"selected_option_id"?: string | null,"similarity"?: number | null,"tenant_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "attempt_answers_attempt_id_tenant_id_fkey"
+      columns: ["attempt_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "exam_attempts"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "attempt_answers_question_id_tenant_id_fkey"
+      columns: ["question_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "questions"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "attempt_answers_selected_option_id_question_id_fkey"
+      columns: ["selected_option_id","question_id"]
+isOneToOne: false
+      referencedRelation: "question_options"
+      referencedColumns: ["id","question_id"]
+    }
+                  ]
                 },"audit_logs": {
                   Row: {
                     "action": string,"actor_id": string | null,"created_at": string,"id": number,"new_value": Json | null,"old_value": Json | null,"record_id": string | null,"tenant_id": string | null
@@ -121,6 +153,160 @@ isOneToOne: false
       referencedColumns: ["id","tenant_id"]
     },{
       foreignKeyName: "classes_tenant_id_fkey"
+      columns: ["tenant_id"]
+isOneToOne: false
+      referencedRelation: "tenants"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"exam_attempts": {
+                  Row: {
+                    "attempt_no": number,"created_at": string,"deadline_at": string,"exam_id": string,"final_score": number | null,"id": string,"is_published": boolean,"is_voided": boolean,"session_id": string,"started_at": string,"status": Database["public"]['Enums']["attempt_status"],"student_id": string,"submitted_at": string | null,"tab_switch_count": number,"tenant_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempt_no"?: number,"created_at"?: string,"deadline_at": string,"exam_id": string,"final_score"?: number | null,"id"?: string,"is_published"?: boolean,"is_voided"?: boolean,"session_id"?: string,"started_at"?: string,"status"?: Database["public"]['Enums']["attempt_status"],"student_id": string,"submitted_at"?: string | null,"tab_switch_count"?: number,"tenant_id": string
+                  }
+                  Update: {
+                    "attempt_no"?: number,"created_at"?: string,"deadline_at"?: string,"exam_id"?: string,"final_score"?: number | null,"id"?: string,"is_published"?: boolean,"is_voided"?: boolean,"session_id"?: string,"started_at"?: string,"status"?: Database["public"]['Enums']["attempt_status"],"student_id"?: string,"submitted_at"?: string | null,"tab_switch_count"?: number,"tenant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exam_attempts_exam_id_student_id_fkey"
+      columns: ["exam_id","student_id"]
+isOneToOne: false
+      referencedRelation: "exam_participants"
+      referencedColumns: ["exam_id","student_id"]
+    },{
+      foreignKeyName: "exam_attempts_exam_id_tenant_id_fkey"
+      columns: ["exam_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "exams"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exam_attempts_student_id_tenant_id_fkey"
+      columns: ["student_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id","tenant_id"]
+    }
+                  ]
+                },"exam_classes": {
+                  Row: {
+                    "class_id": string,"created_at": string,"exam_id": string,"tenant_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "class_id": string,"created_at"?: string,"exam_id": string,"tenant_id"?: string
+                  }
+                  Update: {
+                    "class_id"?: string,"created_at"?: string,"exam_id"?: string,"tenant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exam_classes_class_id_tenant_id_fkey"
+      columns: ["class_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "classes"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exam_classes_exam_id_tenant_id_fkey"
+      columns: ["exam_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "exams"
+      referencedColumns: ["id","tenant_id"]
+    }
+                  ]
+                },"exam_participants": {
+                  Row: {
+                    "created_at": string,"exam_id": string,"student_id": string,"tenant_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"exam_id": string,"student_id": string,"tenant_id"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"exam_id"?: string,"student_id"?: string,"tenant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exam_participants_exam_id_tenant_id_fkey"
+      columns: ["exam_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "exams"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exam_participants_student_id_tenant_id_fkey"
+      columns: ["student_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id","tenant_id"]
+    }
+                  ]
+                },"exam_questions": {
+                  Row: {
+                    "exam_id": string,"order_no": number,"points": number | null,"question_id": string,"tenant_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "exam_id": string,"order_no": number,"points"?: number | null,"question_id": string,"tenant_id"?: string
+                  }
+                  Update: {
+                    "exam_id"?: string,"order_no"?: number,"points"?: number | null,"question_id"?: string,"tenant_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exam_questions_exam_id_tenant_id_fkey"
+      columns: ["exam_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "exams"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exam_questions_question_id_tenant_id_fkey"
+      columns: ["question_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "questions"
+      referencedColumns: ["id","tenant_id"]
+    }
+                  ]
+                },"exams": {
+                  Row: {
+                    "academic_year_id": string,"access_token": string | null,"created_at": string,"created_by": string,"duration_minutes": number,"end_at": string,"essay_threshold": number,"exam_type": Database["public"]['Enums']["exam_type"],"id": string,"kkm": number,"max_tab_switches": number | null,"parent_exam_id": string | null,"published_at": string | null,"require_fullscreen": boolean,"score_visibility": Database["public"]['Enums']["score_visibility"],"shuffle_options": boolean,"shuffle_questions": boolean,"start_at": string,"status": Database["public"]['Enums']["exam_status"],"subject_id": string,"tenant_id": string,"title": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "academic_year_id": string,"access_token"?: string | null,"created_at"?: string,"created_by"?: string,"duration_minutes": number,"end_at": string,"essay_threshold"?: number,"exam_type"?: Database["public"]['Enums']["exam_type"],"id"?: string,"kkm"?: number,"max_tab_switches"?: number | null,"parent_exam_id"?: string | null,"published_at"?: string | null,"require_fullscreen"?: boolean,"score_visibility"?: Database["public"]['Enums']["score_visibility"],"shuffle_options"?: boolean,"shuffle_questions"?: boolean,"start_at": string,"status"?: Database["public"]['Enums']["exam_status"],"subject_id": string,"tenant_id"?: string,"title": string
+                  }
+                  Update: {
+                    "academic_year_id"?: string,"access_token"?: string | null,"created_at"?: string,"created_by"?: string,"duration_minutes"?: number,"end_at"?: string,"essay_threshold"?: number,"exam_type"?: Database["public"]['Enums']["exam_type"],"id"?: string,"kkm"?: number,"max_tab_switches"?: number | null,"parent_exam_id"?: string | null,"published_at"?: string | null,"require_fullscreen"?: boolean,"score_visibility"?: Database["public"]['Enums']["score_visibility"],"shuffle_options"?: boolean,"shuffle_questions"?: boolean,"start_at"?: string,"status"?: Database["public"]['Enums']["exam_status"],"subject_id"?: string,"tenant_id"?: string,"title"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exams_academic_year_id_tenant_id_fkey"
+      columns: ["academic_year_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "academic_years"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exams_created_by_tenant_id_fkey"
+      columns: ["created_by","tenant_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exams_parent_exam_id_tenant_id_fkey"
+      columns: ["parent_exam_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "exams"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exams_subject_id_tenant_id_fkey"
+      columns: ["subject_id","tenant_id"]
+isOneToOne: false
+      referencedRelation: "subjects"
+      referencedColumns: ["id","tenant_id"]
+    },{
+      foreignKeyName: "exams_tenant_id_fkey"
       columns: ["tenant_id"]
 isOneToOne: false
       referencedRelation: "tenants"
@@ -381,6 +567,15 @@ isOneToOne: false
 "assert_essay":
 { Args: { "p_answer_key": string,"p_content": string,"p_keywords": (string)[],"p_label": string }; Returns: undefined
                            },
+"attempt_answer_json":
+{ Args: { "p_attempt_id": string,"p_question_id": string }; Returns: Json
+                           },
+"can_read_exam":
+{ Args: { "p_exam_id": string }; Returns: boolean
+                           },
+"can_view_exam_image":
+{ Args: { "p_object": string }; Returns: boolean
+                           },
 "clean_keywords":
 { Args: { "p_keywords": (string)[] }; Returns: (string)[]
                            },
@@ -393,11 +588,17 @@ isOneToOne: false
 "duplicate_question":
 { Args: { "p_new_id": string,"p_source": string }; Returns: string
                            },
+"get_exam_questions":
+{ Args: { "p_attempt_id": string }; Returns: Json
+                           },
 "import_questions":
 { Args: { "p_questions": Json }; Returns: number
                            },
 "import_students":
 { Args: { "p_rows": Json }; Returns: number
+                           },
+"in_exam_grace":
+{ Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "is_super_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
@@ -413,6 +614,11 @@ isOneToOne: false
               "is_active": boolean,"role": Database["public"]['Enums']["user_role"],"tenant_active": boolean
             }[]
                            },
+"my_exams":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "attempt_id": string,"attempt_status": Database["public"]['Enums']["attempt_status"],"duration_minutes": number,"end_at": string,"id": string,"start_at": string,"subject_name": string,"title": string
+            }[]
+                           },
 "my_role":
 { Args: Record<PropertyKey, never>; Returns: Database["public"]['Enums']["user_role"]
                            },
@@ -424,16 +630,36 @@ isOneToOne: false
 "my_tenant":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
+"owns_exam":
+{ Args: { "p_exam_id": string }; Returns: boolean
+                           },
+"random_exam_token":
+{ Args: Record<PropertyKey, never>; Returns: string
+                           },
+"refresh_exam_token":
+{ Args: { "p_exam_id": string }; Returns: string
+                           },
 "run_subscription_check":
 { Args: { "p_now"?: string }; Returns: {
               "deactivated": number,"notified": number
             }[]
+                           },
+"save_exam":
+{ Args: { "p_class_ids": (string)[],"p_duration_minutes": number,"p_end_at": string,"p_essay_threshold": number,"p_id": string,"p_kkm": number,"p_max_tab_switches"?: number,"p_publish": boolean,"p_questions": Json,"p_require_fullscreen": boolean,"p_score_visibility": Database["public"]['Enums']["score_visibility"],"p_shuffle_options": boolean,"p_shuffle_questions": boolean,"p_start_at": string,"p_student_ids": (string)[],"p_subject_id": string,"p_title": string }; Returns: string
                            },
 "save_question":
 { Args: { "p_answer_key"?: string,"p_answers"?: (string)[],"p_content": string,"p_explanation": string,"p_id": string,"p_image_path": string,"p_keywords"?: (string)[],"p_options"?: Json,"p_pairs"?: Json,"p_points": number,"p_subject_id": string,"p_subs"?: Json,"p_type": Database["public"]['Enums']["question_type"] }; Returns: string
                            },
 "set_school_user_active":
 { Args: { "p_active": boolean,"p_id": string }; Returns: undefined
+                           },
+"start_attempt":
+{ Args: { "p_exam_id": string,"p_token": string }; Returns: {
+              "attempt_id": string,"deadline_at": string,"session_id": string
+            }[]
+                           },
+"student_exam_open":
+{ Args: { "p_exam_id": string }; Returns: boolean
                            },
 "students_without_class":
 { Args: { "p_academic_year_id": string,"p_q"?: string }; Returns: {
@@ -453,7 +679,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "import_status": "processing"|"success"|"failed","payment_status": "pending"|"paid"|"cancelled","question_type": "multiple_choice"|"true_false"|"short_answer"|"matching"|"essay"|"multi_essay","tenant_status": "active"|"inactive","user_role": "super_admin"|"school_admin"|"teacher"|"student"
+            "attempt_status": "in_progress"|"submitted","exam_status": "draft"|"published","exam_type": "regular"|"remedial","import_status": "processing"|"success"|"failed","payment_status": "pending"|"paid"|"cancelled","question_type": "multiple_choice"|"true_false"|"short_answer"|"matching"|"essay"|"multi_essay","score_visibility": "hidden"|"score"|"score_and_review","tenant_status": "active"|"inactive","user_role": "super_admin"|"school_admin"|"teacher"|"student"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -573,7 +799,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "import_status": ["processing", "success", "failed"],"payment_status": ["pending", "paid", "cancelled"],"question_type": ["multiple_choice", "true_false", "short_answer", "matching", "essay", "multi_essay"],"tenant_status": ["active", "inactive"],"user_role": ["super_admin", "school_admin", "teacher", "student"]
+            "attempt_status": ["in_progress", "submitted"],"exam_status": ["draft", "published"],"exam_type": ["regular", "remedial"],"import_status": ["processing", "success", "failed"],"payment_status": ["pending", "paid", "cancelled"],"question_type": ["multiple_choice", "true_false", "short_answer", "matching", "essay", "multi_essay"],"score_visibility": ["hidden", "score", "score_and_review"],"tenant_status": ["active", "inactive"],"user_role": ["super_admin", "school_admin", "teacher", "student"]
           }
         }
 } as const

@@ -76,7 +76,7 @@ export const NAV: Record<UserRole, NavItem[]> = {
       label: "Bank soal",
       icon: Library,
     }, // F2.9 (daftar lengkap F2.12)
-    { href: "/teacher/exams", label: "Ujian", icon: GraduationCap, soon: true }, // F3.3
+    { href: "/teacher/exams", label: "Ujian", icon: GraduationCap }, // F3.3
     {
       href: "/teacher/grading",
       label: "Koreksi",
@@ -92,7 +92,7 @@ export const NAV: Record<UserRole, NavItem[]> = {
   ],
   student: [
     { href: "/student", label: "Beranda", icon: LayoutDashboard },
-    { href: "/student/exams", label: "Ujian", icon: GraduationCap, soon: true }, // F3.6
+    { href: "/student/exams", label: "Ujian", icon: GraduationCap }, // F3.6
     { href: "/student/grades", label: "Nilai", icon: Trophy, soon: true }, // F3.14
   ],
 };

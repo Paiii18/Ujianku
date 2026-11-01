@@ -17,7 +17,7 @@ import type { Database } from "@/types/database";
 // Data dimuat saat dialog dibuka (guru boleh membaca soal sekolahnya, RLS F2.7).
 // Sisi kanan menjodohkan diurutkan per right_key (acak), sama seperti nanti di ujian (F3.7).
 
-type Preview = {
+export type Preview = {
   type: Database["public"]["Enums"]["question_type"];
   content: string;
   image: string | null;
@@ -63,6 +63,33 @@ async function loadPreview(id: string): Promise<Preview | null> {
   const url = (p: string | null) =>
     (p && signed?.find((s) => s.path === p)?.signedUrl) || null;
 
+  return toPreview(q, subs ?? [], url);
+}
+
+type PreviewSource = {
+  type: Preview["type"];
+  content: string;
+  image_path: string | null;
+  points: number;
+  question_options: {
+    label: string;
+    content: string;
+    image_path: string | null;
+  }[];
+  question_pairs: {
+    left_text: string;
+    right_text: string;
+    right_key: string;
+    position: number;
+  }[];
+};
+
+// Bentuk data pratinjau dari baris soal + sub-soal; url() mengubah path Storage jadi signed URL.
+export function toPreview(
+  q: PreviewSource,
+  subs: { content: string; points: number }[],
+  url: (path: string | null) => string | null,
+): Preview {
   const pairs = q.question_pairs;
   return {
     type: q.type,
@@ -80,7 +107,7 @@ async function loadPreview(id: string): Promise<Preview | null> {
     rights: [...pairs]
       .sort((a, b) => a.right_key.localeCompare(b.right_key))
       .map((p) => p.right_text),
-    subs: (subs ?? []).map((s) => ({
+    subs: subs.map((s) => ({
       content: s.content,
       points: Number(s.points),
     })),
@@ -126,14 +153,15 @@ export default function QuestionPreview({
             className="mx-auto size-6 animate-spin text-muted-foreground"
           />
         ) : (
-          <PreviewBody data={data} />
+          <PreviewBody data={data} name={questionId} />
         )}
       </DialogContent>
     </Dialog>
   );
 }
 
-function PreviewBody({ data }: { data: Preview }) {
+// name: pembeda grup radio bila beberapa soal dirender di satu halaman (pratinjau ujian F3.5)
+export function PreviewBody({ data, name }: { data: Preview; name: string }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted-foreground">{data.points} poin</p>
@@ -157,7 +185,7 @@ function PreviewBody({ data }: { data: Preview }) {
             >
               <input
                 type="radio"
-                name="preview"
+                name={name}
                 className="mt-1 size-5 accent-primary"
               />
               <span className="flex flex-col gap-2">

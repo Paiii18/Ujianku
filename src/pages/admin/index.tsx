@@ -25,6 +25,7 @@ type Props = ShellProps & {
   activeCount: number;
   inactiveCount: number;
   pendingCount: number;
+  examCount: number;
   expiring: { id: string; code: string; name: string; activeUntil: string }[];
   revenue: { label: string; total: number }[];
 };
@@ -45,23 +46,28 @@ export const getServerSideProps = requireRole(
   "super_admin",
   async (_ctx, supabase) => {
     const now = Date.now();
-    const [{ data: tenants }, { data: paid }, { count: pendingCount }] =
-      await Promise.all([
-        // ponytail: semua sekolah dihitung di sini; pindah ke agregasi SQL (RPC) bila sekolah > ±1.000
-        supabase.from("tenants").select("id, code, name, status, active_until"),
-        supabase
-          .from("subscriptions")
-          .select("amount, paid_at")
-          .eq("status", "paid")
-          .gte(
-            "paid_at",
-            new Date(now - (MONTHS * 31 + 1) * DAY_MS).toISOString(),
-          ),
-        supabase
-          .from("subscriptions")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "pending"),
-      ]);
+    const [
+      { data: tenants },
+      { data: paid },
+      { count: pendingCount },
+      { count: examCount },
+    ] = await Promise.all([
+      // ponytail: semua sekolah dihitung di sini; pindah ke agregasi SQL (RPC) bila sekolah > ±1.000
+      supabase.from("tenants").select("id, code, name, status, active_until"),
+      supabase
+        .from("subscriptions")
+        .select("amount, paid_at")
+        .eq("status", "paid")
+        .gte(
+          "paid_at",
+          new Date(now - (MONTHS * 31 + 1) * DAY_MS).toISOString(),
+        ),
+      supabase
+        .from("subscriptions")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending"),
+      supabase.from("exams").select("id", { count: "exact", head: true }),
+    ]);
 
     // Aktif = status 'active' DAN masa aktif belum lewat (sama dengan tenant_is_active()).
     const isActive = (t: { status: string; active_until: string | null }) =>
@@ -91,6 +97,7 @@ export const getServerSideProps = requireRole(
       activeCount: active.length,
       inactiveCount: (tenants ?? []).length - active.length,
       pendingCount: pendingCount ?? 0,
+      examCount: examCount ?? 0,
       expiring: active
         .filter((t) => new Date(t.active_until!).getTime() - now <= 7 * DAY_MS)
         .sort((a, b) => a.active_until!.localeCompare(b.active_until!))
@@ -110,6 +117,7 @@ export default function AdminDashboard({
   activeCount,
   inactiveCount,
   pendingCount,
+  examCount,
   expiring,
   revenue,
 }: Props) {
@@ -124,8 +132,7 @@ export default function AdminDashboard({
             value={pendingCount}
             href="/admin/subscriptions?status=pending"
           />
-          {/* ponytail: jumlah ujian ditambahkan setelah tabel exams ada (F3.1) */}
-          <Stat label="Ujian" value="—" hint="Tersedia setelah fitur ujian" />
+          <Stat label="Ujian" value={examCount} hint="Semua sekolah" />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-2">
